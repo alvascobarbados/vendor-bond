@@ -135,12 +135,3 @@ export function weakPin(pin: string) {
   if (/^(\d)\1{5}$/.test(pin)) return true;
   return ["123456", "654321", "012345", "543210", "111222", "123123"].includes(pin);
 }
-
-/** Throws unless the signed-in owner's RLS-scoped client can see this vendor. */
-export async function assertOwned(
-  supabase: { from: (t: "vendors") => { select: (c: string) => { eq: (a: string, b: string) => { maybeSingle: () => Promise<{ data: unknown }> } } } },
-  vendorId: string,
-) {
-  const { data } = await supabase.from("vendors").select("id").eq("id", vendorId).maybeSingle();
-  if (!data) throw new Error("FORBIDDEN");
-}

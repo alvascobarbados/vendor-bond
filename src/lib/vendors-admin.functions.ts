@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { assertOwned } from "@/lib/vendor-auth.server";
+import { assertOwned } from "@/lib/owned";
 import { vendorIdInput, vendorSaveInput, enabledInput } from "@/lib/vendor-schemas-admin";
 
 export const adminListVendors = createServerFn({ method: "GET" })
