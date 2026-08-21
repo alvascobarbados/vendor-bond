@@ -1,0 +1,1 @@
+UPDATE public.vendor_access SET failed_attempts = 0, locked_until = NULL;
