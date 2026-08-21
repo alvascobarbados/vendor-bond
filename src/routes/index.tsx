@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { fetchTracker, fetchVendors, signUrl } from "@/lib/tracker-queries";
 import * as owner from "@/lib/owner-api";
+import { claimVendors } from "@/lib/owner.functions";
+
 import { derive, type Job, type Payment, type Vendor } from "@/lib/tracker-model";
 import { Tracker } from "@/components/tracker/Tracker";
 import { Toast } from "@/components/tracker/Toast";
