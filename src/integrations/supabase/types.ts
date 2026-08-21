@@ -282,31 +282,119 @@ export type Database = {
       vendor_access: {
         Row: {
           created_at: string
+          enabled: boolean
+          failed_attempts: number
           id: string
+          last_device: string | null
           last_seen_at: string | null
-          pin: string | null
-          token: string
+          locked_until: string | null
+          pin_hash: string | null
+          pin_set_at: string | null
+          setup_code_expires_at: string | null
+          setup_code_hash: string | null
           vendor_id: string
         }
         Insert: {
           created_at?: string
+          enabled?: boolean
+          failed_attempts?: number
           id?: string
+          last_device?: string | null
           last_seen_at?: string | null
-          pin?: string | null
-          token: string
+          locked_until?: string | null
+          pin_hash?: string | null
+          pin_set_at?: string | null
+          setup_code_expires_at?: string | null
+          setup_code_hash?: string | null
           vendor_id: string
         }
         Update: {
           created_at?: string
+          enabled?: boolean
+          failed_attempts?: number
           id?: string
+          last_device?: string | null
           last_seen_at?: string | null
-          pin?: string | null
-          token?: string
+          locked_until?: string | null
+          pin_hash?: string | null
+          pin_set_at?: string | null
+          setup_code_expires_at?: string | null
+          setup_code_hash?: string | null
           vendor_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "vendor_access_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_login_events: {
+        Row: {
+          at: string
+          id: string
+          kind: Database["public"]["Enums"]["vendor_login_kind"]
+          user_agent: string | null
+          vendor_id: string
+        }
+        Insert: {
+          at?: string
+          id?: string
+          kind: Database["public"]["Enums"]["vendor_login_kind"]
+          user_agent?: string | null
+          vendor_id: string
+        }
+        Update: {
+          at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["vendor_login_kind"]
+          user_agent?: string | null
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_login_events_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          last_used_at: string
+          token_hash: string
+          user_agent: string | null
+          vendor_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          last_used_at?: string
+          token_hash: string
+          user_agent?: string | null
+          vendor_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          last_used_at?: string
+          token_hash?: string
+          user_agent?: string | null
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_sessions_vendor_id_fkey"
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
@@ -386,6 +474,14 @@ export type Database = {
       item_target: "job" | "payment" | "general"
       job_status: "pending" | "confirmed" | "closed"
       payment_kind: "contract" | "bill"
+      vendor_login_kind:
+        | "setup_code"
+        | "set_pin"
+        | "ok"
+        | "fail"
+        | "locked"
+        | "reset"
+        | "disabled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -518,6 +614,15 @@ export const Constants = {
       item_target: ["job", "payment", "general"],
       job_status: ["pending", "confirmed", "closed"],
       payment_kind: ["contract", "bill"],
+      vendor_login_kind: [
+        "setup_code",
+        "set_pin",
+        "ok",
+        "fail",
+        "locked",
+        "reset",
+        "disabled",
+      ],
     },
   },
 } as const
