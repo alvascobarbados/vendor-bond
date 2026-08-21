@@ -1,0 +1,1 @@
+UPDATE public.vendor_access SET setup_code_hash = '$2b$10$SqVeXVxfPX.eUrwG1VJI4ezh5cGDkzKBvIdGAVDLBrQ2fi83qp46W', setup_code_expires_at = now() + interval '7 days', failed_attempts = 0, locked_until = NULL WHERE vendor_id = (SELECT id FROM public.vendors WHERE slug = 'andre');
