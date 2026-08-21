@@ -111,16 +111,16 @@ function ContractorView() {
 
   if (stateQ.isLoading) return <div className="loading">Loading…</div>;
   const s = stateQ.data;
-  if (!s || s.state === "not_found") return <Card title="Not found" lead="This page doesn't exist. Ask Av for the right link." />;
+  if (!s || s.state === "not_found") return <Card title="Not found" lead="This page doesn't exist. Ask the owner for the right link." />;
   if (s.state === "disabled") return <Card title={s.company} lead="This page has been switched off." />;
   if (s.state === "no_code")
-    return <Card title={`Hi ${s.firstName} 👋`} lead="Ask Av to send you a setup code." />;
+    return <Card title={`Hi ${s.firstName} 👋`} lead={`Ask ${s.ownerName} to send you a setup code.`} />;
   if (s.state === "locked") {
     const until = s.lockedUntil ? new Date(s.lockedUntil) : null;
     return (
       <Card
         title="Too many tries"
-        lead={`Locked for 15 minutes${until ? ` — until ${until.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : ""}. Av can unlock it.`}
+        lead={`Locked for 15 minutes${until ? ` — until ${until.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : ""}. ${s.ownerName} can unlock it.`}
       />
     );
   }
@@ -128,7 +128,7 @@ function ContractorView() {
   if (s.state === "needs_setup") {
     if (step === "code")
       return (
-        <Card title={`Hi ${s.firstName} 👋`} lead="Enter the setup code Av sent you." error={err} shake={shake}>
+        <Card title={`Hi ${s.firstName} 👋`} lead={`Enter the setup code ${s.ownerName} sent you.`} error={err} shake={shake}>
           <Boxes
             key="code"
             value={code}
@@ -212,7 +212,7 @@ function ContractorView() {
             } catch (e) {
               const m = String((e as Error).message ?? "");
               setPin("");
-              if (m.includes("LOCKED")) fail("Too many tries — locked for 15 minutes. Av can unlock it.");
+              if (m.includes("LOCKED")) fail(`Too many tries — locked for 15 minutes. ${s.ownerName} can unlock it.`);
               else if (m.includes("BAD_PIN")) fail(`Try again (${m.split(":")[1] ?? ""} left)`);
               else fail("Couldn't sign you in");
             } finally {
@@ -220,7 +220,7 @@ function ContractorView() {
             }
           }}
         />
-        <p className="hint">Forgot PIN? Ask Av to reset it.</p>
+        <p className="hint">{`Forgot PIN? Ask ${s.ownerName} to reset it.`}</p>
       </Card>
     );
 

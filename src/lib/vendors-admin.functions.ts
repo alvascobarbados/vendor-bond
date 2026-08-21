@@ -1,12 +1,14 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { assertOwned } from "@/lib/owned";
+import { requireOwner } from "@/lib/owner-guard";
 import { vendorIdInput, vendorSaveInput, enabledInput } from "@/lib/vendor-schemas-admin";
 
 export const adminListVendors = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { baseUrl } = await import("@/lib/vendor-auth.server");
+    await requireOwner(context);
+    const { appSettings } = await import("@/lib/settings.server");
+    const settings = await appSettings();
     const { data: vendors, error } = await context.supabase.from("vendors").select("*").order("name");
     if (error) throw error;
     const ids = (vendors ?? []).map((v) => v.id);
@@ -21,7 +23,7 @@ export const adminListVendors = createServerFn({ method: "GET" })
         .limit(400),
     ]);
     return {
-      baseUrl: baseUrl(),
+      baseUrl: settings.public_base_url,
       vendors: (vendors ?? []).map((v) => {
         const a = (access ?? []).find((x) => x.vendor_id === v.id) ?? null;
         return {
@@ -49,6 +51,7 @@ export const adminSaveVendor = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => vendorSaveInput.parse(d))
   .handler(async ({ data, context }) => {
+    await requireOwner(context);
     const row = {
       name: data.name.trim(),
       contact_first_name: data.contact_first_name?.trim() || null,
@@ -60,7 +63,6 @@ export const adminSaveVendor = createServerFn({ method: "POST" })
       bank: data.bank,
     };
     if (data.id) {
-      await assertOwned(context.supabase, data.id);
       const { error } = await context.supabase.from("vendors").update(row).eq("id", data.id);
       if (error) throw error;
       return { id: data.id };
@@ -80,7 +82,7 @@ export const adminSetAccessEnabled = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => enabledInput.parse(d))
   .handler(async ({ data, context }) => {
-    await assertOwned(context.supabase, data.vendor_id);
+    await requireOwner(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: existing } = await supabaseAdmin
       .from("vendor_access")
@@ -100,8 +102,10 @@ export const adminNewSetupCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => vendorIdInput.parse(d))
   .handler(async ({ data, context }) => {
-    await assertOwned(context.supabase, data.vendor_id);
+    await requireOwner(context);
     const h = await import("@/lib/vendor-auth.server");
+    const { appSettings } = await import("@/lib/settings.server");
+    const settings = await appSettings();
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const code = String(crypto.getRandomValues(new Uint32Array(1))[0]! % 1_000_000).padStart(6, "0");
     const { data: existing } = await supabaseAdmin
@@ -127,11 +131,11 @@ export const adminNewSetupCode = createServerFn({ method: "POST" })
       .eq("id", data.vendor_id)
       .single();
     const first = vendor?.contact_first_name ?? vendor?.name ?? "there";
-    const host = h.baseUrl().replace(/^https?:\/\//, "");
+    const host = settings.public_base_url.replace(/^https?:\/\//, "");
     const pretty = `${code.slice(0, 3)} ${code.slice(3)}`;
     return {
       code,
-      message: `Hi ${first} — your Starpoint tracker is at ${host}. Tap Contractor → ${first} → enter code ${pretty}, then choose your own 6-digit PIN. Link: ${host}/c/${vendor?.slug}`,
+      message: `Hi ${first} — your ${settings.site_name.replace(/ RenoTracker$/, "")} tracker is at ${host}. Tap Contractor → ${first} → enter code ${pretty}, then choose your own 6-digit PIN. Link: ${host}/c/${vendor?.slug}`,
     };
   });
 
@@ -139,7 +143,7 @@ export const adminResetPin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => vendorIdInput.parse(d))
   .handler(async ({ data, context }) => {
-    await assertOwned(context.supabase, data.vendor_id);
+    await requireOwner(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin
       .from("vendor_access")
