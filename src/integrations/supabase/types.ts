@@ -14,16 +14,364 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attachments: {
+        Row: {
+          created_at: string
+          file_name: string
+          id: string
+          is_primary: boolean
+          mime: string | null
+          storage_path: string
+          target_id: string
+          target_type: Database["public"]["Enums"]["attach_target"]
+          uploaded_by: string | null
+          vendor_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          id?: string
+          is_primary?: boolean
+          mime?: string | null
+          storage_path: string
+          target_id: string
+          target_type: Database["public"]["Enums"]["attach_target"]
+          uploaded_by?: string | null
+          vendor_id: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          id?: string
+          is_primary?: boolean
+          mime?: string | null
+          storage_path?: string
+          target_id?: string
+          target_type?: Database["public"]["Enums"]["attach_target"]
+          uploaded_by?: string | null
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attachments_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      items: {
+        Row: {
+          author_label: string
+          created_at: string
+          created_by: string | null
+          id: string
+          resolved_at: string | null
+          status: Database["public"]["Enums"]["item_status"]
+          target_id: string | null
+          target_type: Database["public"]["Enums"]["item_target"]
+          text: string
+          vendor_id: string
+        }
+        Insert: {
+          author_label?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["item_status"]
+          target_id?: string | null
+          target_type?: Database["public"]["Enums"]["item_target"]
+          text: string
+          vendor_id: string
+        }
+        Update: {
+          author_label?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["item_status"]
+          target_id?: string | null
+          target_type?: Database["public"]["Enums"]["item_target"]
+          text?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "items_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_revisions: {
+        Row: {
+          contract_amount: number
+          created_at: string
+          estimate_file_id: string | null
+          id: string
+          job_id: string
+          note: string | null
+        }
+        Insert: {
+          contract_amount: number
+          created_at?: string
+          estimate_file_id?: string | null
+          id?: string
+          job_id: string
+          note?: string | null
+        }
+        Update: {
+          contract_amount?: number
+          created_at?: string
+          estimate_file_id?: string | null
+          id?: string
+          job_id?: string
+          note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_revisions_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jobs: {
+        Row: {
+          approved_at: string | null
+          contract_amount: number
+          created_at: string
+          estimate_no: string
+          id: string
+          scope: string | null
+          sort_order: number
+          status: Database["public"]["Enums"]["job_status"]
+          title: string
+          vendor_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          contract_amount?: number
+          created_at?: string
+          estimate_no: string
+          id?: string
+          scope?: string | null
+          sort_order?: number
+          status?: Database["public"]["Enums"]["job_status"]
+          title: string
+          vendor_id: string
+        }
+        Update: {
+          approved_at?: string | null
+          contract_amount?: number
+          created_at?: string
+          estimate_no?: string
+          id?: string
+          scope?: string | null
+          sort_order?: number
+          status?: Database["public"]["Enums"]["job_status"]
+          title?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jobs_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_allocations: {
+        Row: {
+          amount: number
+          id: string
+          invoice_ref: string | null
+          job_id: string
+          payment_id: string
+        }
+        Insert: {
+          amount: number
+          id?: string
+          invoice_ref?: string | null
+          job_id: string
+          payment_id: string
+        }
+        Update: {
+          amount?: number
+          id?: string
+          invoice_ref?: string | null
+          job_id?: string
+          payment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_allocations_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_allocations_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          bank_ref: string
+          created_at: string
+          created_by: string | null
+          date: string
+          description: string | null
+          detail: string | null
+          id: string
+          kind: Database["public"]["Enums"]["payment_kind"]
+          payment_no: number | null
+          vendor_id: string
+        }
+        Insert: {
+          amount: number
+          bank_ref: string
+          created_at?: string
+          created_by?: string | null
+          date: string
+          description?: string | null
+          detail?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["payment_kind"]
+          payment_no?: number | null
+          vendor_id: string
+        }
+        Update: {
+          amount?: number
+          bank_ref?: string
+          created_at?: string
+          created_by?: string | null
+          date?: string
+          description?: string | null
+          detail?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["payment_kind"]
+          payment_no?: number | null
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_access: {
+        Row: {
+          created_at: string
+          id: string
+          last_seen_at: string | null
+          pin: string | null
+          token: string
+          vendor_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_seen_at?: string | null
+          pin?: string | null
+          token: string
+          vendor_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_seen_at?: string | null
+          pin?: string | null
+          token?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_access_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendors: {
+        Row: {
+          address: string | null
+          bank: Json
+          contact_first_name: string | null
+          created_at: string
+          id: string
+          initials: string | null
+          legal_name: string | null
+          name: string
+          owner_id: string | null
+          slug: string
+          sort_order: number
+          trade: string | null
+        }
+        Insert: {
+          address?: string | null
+          bank?: Json
+          contact_first_name?: string | null
+          created_at?: string
+          id?: string
+          initials?: string | null
+          legal_name?: string | null
+          name: string
+          owner_id?: string | null
+          slug: string
+          sort_order?: number
+          trade?: string | null
+        }
+        Update: {
+          address?: string | null
+          bank?: Json
+          contact_first_name?: string | null
+          created_at?: string
+          id?: string
+          initials?: string | null
+          legal_name?: string | null
+          name?: string
+          owner_id?: string | null
+          slug?: string
+          sort_order?: number
+          trade?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      owns_vendor: { Args: { _vendor_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      attach_target: "payment" | "job" | "item"
+      item_status: "open" | "resolved"
+      item_target: "job" | "payment" | "general"
+      job_status: "pending" | "confirmed" | "closed"
+      payment_kind: "contract" | "bill"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +498,12 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      attach_target: ["payment", "job", "item"],
+      item_status: ["open", "resolved"],
+      item_target: ["job", "payment", "general"],
+      job_status: ["pending", "confirmed", "closed"],
+      payment_kind: ["contract", "bill"],
+    },
   },
 } as const
