@@ -10,43 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as VTokenRouteImport } from './routes/v.$token'
+import { Route as OwnerRouteImport } from './routes/owner'
+import { Route as CIndexRouteImport } from './routes/c.index'
+import { Route as CSlugRouteImport } from './routes/c.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VTokenRoute = VTokenRouteImport.update({
-  id: '/v/$token',
-  path: '/v/$token',
+const OwnerRoute = OwnerRouteImport.update({
+  id: '/owner',
+  path: '/owner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CIndexRoute = CIndexRouteImport.update({
+  id: '/c/',
+  path: '/c/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CSlugRoute = CSlugRouteImport.update({
+  id: '/c/$slug',
+  path: '/c/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/v/$token': typeof VTokenRoute
+  '/owner': typeof OwnerRoute
+  '/c/$slug': typeof CSlugRoute
+  '/c/': typeof CIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/v/$token': typeof VTokenRoute
+  '/owner': typeof OwnerRoute
+  '/c/$slug': typeof CSlugRoute
+  '/c': typeof CIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/v/$token': typeof VTokenRoute
+  '/owner': typeof OwnerRoute
+  '/c/$slug': typeof CSlugRoute
+  '/c/': typeof CIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/v/$token'
+  fullPaths: '/' | '/owner' | '/c/$slug' | '/c/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/v/$token'
-  id: '__root__' | '/' | '/v/$token'
+  to: '/' | '/owner' | '/c/$slug' | '/c'
+  id: '__root__' | '/' | '/owner' | '/c/$slug' | '/c/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  VTokenRoute: typeof VTokenRoute
+  OwnerRoute: typeof OwnerRoute
+  CSlugRoute: typeof CSlugRoute
+  CIndexRoute: typeof CIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,11 +78,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/v/$token': {
-      id: '/v/$token'
-      path: '/v/$token'
-      fullPath: '/v/$token'
-      preLoaderRoute: typeof VTokenRouteImport
+    '/owner': {
+      id: '/owner'
+      path: '/owner'
+      fullPath: '/owner'
+      preLoaderRoute: typeof OwnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/c/': {
+      id: '/c/'
+      path: '/c'
+      fullPath: '/c/'
+      preLoaderRoute: typeof CIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/c/$slug': {
+      id: '/c/$slug'
+      path: '/c/$slug'
+      fullPath: '/c/$slug'
+      preLoaderRoute: typeof CSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -70,7 +104,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  VTokenRoute: VTokenRoute,
+  OwnerRoute: OwnerRoute,
+  CSlugRoute: CSlugRoute,
+  CIndexRoute: CIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,0 +1,1 @@
+UPDATE public.items SET status = 'open', resolved_at = NULL WHERE resolved_at::date = CURRENT_DATE;

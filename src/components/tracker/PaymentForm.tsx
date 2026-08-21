@@ -56,12 +56,13 @@ export function PaymentForm({
   d: Derived;
   draft: PaymentDraft;
   onClose: () => void;
-  onSave: (draft: PaymentDraft) => Promise<void>;
+  onSave: (draft: PaymentDraft, slip?: File | null) => Promise<void>;
   onDelete?: (id: string) => Promise<void>;
   toast: (m: string) => void;
 }) {
   const [f, setF] = useState<PaymentDraft>(initial);
   const [busy, setBusy] = useState(false);
+  const [slip, setSlip] = useState<File | null>(null);
 
   const amount = Number(f.amount || 0);
   const allocSum = f.allocations.reduce((s, a) => s + Number(a.amount || 0), 0);
@@ -79,7 +80,7 @@ export function PaymentForm({
     if (off) return toast("Allocations must add up to the amount");
     setBusy(true);
     try {
-      await onSave(f);
+      await onSave(f, slip);
       toast(f.id ? "Payment updated" : "Payment saved");
       onClose();
     } catch (e) {
@@ -250,6 +251,16 @@ export function PaymentForm({
             {off && <div className="allocwarn">Allocations {money(allocSum)} ≠ amount {money(amount)}</div>}
           </div>
         )}
+
+        <label className="fw">
+          <span>Attach the slip (optional)</span>
+          <input
+            type="file"
+            accept="image/*,application/pdf"
+            capture="environment"
+            onChange={(e) => setSlip(e.target.files?.[0] ?? null)}
+          />
+        </label>
 
         <div className="formacts">
           {f.id && onDelete && (

@@ -1,0 +1,1 @@
+UPDATE public.vendors SET slug = 'andre' WHERE slug = 'alternative-construction';
