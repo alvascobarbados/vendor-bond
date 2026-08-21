@@ -52,20 +52,22 @@ export async function removeAttachment(id: string, storage_path: string) {
 }
 
 export async function savePayment(vendorId: string, f: PaymentDraft) {
-  const { error } = await supabase.rpc("upsert_payment", {
+  const args: Record<string, unknown> = {
     _vendor_id: vendorId,
     _date: f.date,
     _bank_ref: f.bank_ref.trim(),
     _amount: Number(f.amount),
     _kind: f.kind,
-    _payment_no: f.payment_no ? Number(f.payment_no) : undefined,
-    _description: f.description || undefined,
-    _detail: f.detail || undefined,
     _allocations: f.allocations
       .filter((a) => a.job_id && Number(a.amount))
       .map((a) => ({ job_id: a.job_id, amount: Number(a.amount), invoice_ref: a.invoice_ref || null })),
-    _payment_id: f.id ?? undefined,
-  });
+  };
+  if (f.payment_no) args["_payment_no"] = Number(f.payment_no);
+  if (f.description) args["_description"] = f.description;
+  if (f.detail) args["_detail"] = f.detail;
+  if (f.id) args["_payment_id"] = f.id;
+
+  const { error } = await supabase.rpc("upsert_payment", args as never);
   if (error) throw error;
 }
 
