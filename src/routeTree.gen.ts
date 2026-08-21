@@ -13,6 +13,14 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as OwnerRouteImport } from './routes/owner'
 import { Route as CIndexRouteImport } from './routes/c.index'
 import { Route as CSlugRouteImport } from './routes/c.$slug'
+import { Route as OwnerIndexRouteImport } from './routes/owner.index'
+import { Route as OwnerAccountRouteImport } from './routes/owner.account'
+import { Route as OwnerDataRouteImport } from './routes/owner.data'
+import { Route as OwnerSettingsRouteImport } from './routes/owner.settings'
+import { Route as OwnerTeamRouteImport } from './routes/owner.team'
+import { Route as OwnerTSlugRouteImport } from './routes/owner.t.$slug'
+import { Route as OwnerVendorsIndexRouteImport } from './routes/owner.vendors.index'
+import { Route as OwnerVendorsIdRouteImport } from './routes/owner.vendors.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,37 +42,136 @@ const CSlugRoute = CSlugRouteImport.update({
   path: '/c/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OwnerIndexRoute = OwnerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OwnerRoute,
+} as any)
+const OwnerAccountRoute = OwnerAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => OwnerRoute,
+} as any)
+const OwnerDataRoute = OwnerDataRouteImport.update({
+  id: '/data',
+  path: '/data',
+  getParentRoute: () => OwnerRoute,
+} as any)
+const OwnerSettingsRoute = OwnerSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => OwnerRoute,
+} as any)
+const OwnerTeamRoute = OwnerTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => OwnerRoute,
+} as any)
+const OwnerTSlugRoute = OwnerTSlugRouteImport.update({
+  id: '/t/$slug',
+  path: '/t/$slug',
+  getParentRoute: () => OwnerRoute,
+} as any)
+const OwnerVendorsIndexRoute = OwnerVendorsIndexRouteImport.update({
+  id: '/vendors/',
+  path: '/vendors/',
+  getParentRoute: () => OwnerRoute,
+} as any)
+const OwnerVendorsIdRoute = OwnerVendorsIdRouteImport.update({
+  id: '/vendors/$id',
+  path: '/vendors/$id',
+  getParentRoute: () => OwnerRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/owner': typeof OwnerRoute
+  '/owner': typeof OwnerRouteWithChildren
   '/c/$slug': typeof CSlugRoute
+  '/owner/account': typeof OwnerAccountRoute
+  '/owner/data': typeof OwnerDataRoute
+  '/owner/settings': typeof OwnerSettingsRoute
+  '/owner/team': typeof OwnerTeamRoute
   '/c/': typeof CIndexRoute
+  '/owner/': typeof OwnerIndexRoute
+  '/owner/t/$slug': typeof OwnerTSlugRoute
+  '/owner/vendors/$id': typeof OwnerVendorsIdRoute
+  '/owner/vendors/': typeof OwnerVendorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/owner': typeof OwnerRoute
   '/c/$slug': typeof CSlugRoute
+  '/owner/account': typeof OwnerAccountRoute
+  '/owner/data': typeof OwnerDataRoute
+  '/owner/settings': typeof OwnerSettingsRoute
+  '/owner/team': typeof OwnerTeamRoute
   '/c': typeof CIndexRoute
+  '/owner': typeof OwnerIndexRoute
+  '/owner/t/$slug': typeof OwnerTSlugRoute
+  '/owner/vendors/$id': typeof OwnerVendorsIdRoute
+  '/owner/vendors': typeof OwnerVendorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/owner': typeof OwnerRoute
+  '/owner': typeof OwnerRouteWithChildren
   '/c/$slug': typeof CSlugRoute
+  '/owner/account': typeof OwnerAccountRoute
+  '/owner/data': typeof OwnerDataRoute
+  '/owner/settings': typeof OwnerSettingsRoute
+  '/owner/team': typeof OwnerTeamRoute
   '/c/': typeof CIndexRoute
+  '/owner/': typeof OwnerIndexRoute
+  '/owner/t/$slug': typeof OwnerTSlugRoute
+  '/owner/vendors/$id': typeof OwnerVendorsIdRoute
+  '/owner/vendors/': typeof OwnerVendorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/owner' | '/c/$slug' | '/c/'
+  fullPaths:
+    | '/'
+    | '/owner'
+    | '/c/$slug'
+    | '/owner/account'
+    | '/owner/data'
+    | '/owner/settings'
+    | '/owner/team'
+    | '/c/'
+    | '/owner/'
+    | '/owner/t/$slug'
+    | '/owner/vendors/$id'
+    | '/owner/vendors/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/owner' | '/c/$slug' | '/c'
-  id: '__root__' | '/' | '/owner' | '/c/$slug' | '/c/'
+  to:
+    | '/'
+    | '/c/$slug'
+    | '/owner/account'
+    | '/owner/data'
+    | '/owner/settings'
+    | '/owner/team'
+    | '/c'
+    | '/owner'
+    | '/owner/t/$slug'
+    | '/owner/vendors/$id'
+    | '/owner/vendors'
+  id:
+    | '__root__'
+    | '/'
+    | '/owner'
+    | '/c/$slug'
+    | '/owner/account'
+    | '/owner/data'
+    | '/owner/settings'
+    | '/owner/team'
+    | '/c/'
+    | '/owner/'
+    | '/owner/t/$slug'
+    | '/owner/vendors/$id'
+    | '/owner/vendors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  OwnerRoute: typeof OwnerRoute
+  OwnerRoute: typeof OwnerRouteWithChildren
   CSlugRoute: typeof CSlugRoute
   CIndexRoute: typeof CIndexRoute
 }
@@ -99,12 +206,92 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/owner/': {
+      id: '/owner/'
+      path: '/'
+      fullPath: '/owner/'
+      preLoaderRoute: typeof OwnerIndexRouteImport
+      parentRoute: typeof OwnerRoute
+    }
+    '/owner/account': {
+      id: '/owner/account'
+      path: '/account'
+      fullPath: '/owner/account'
+      preLoaderRoute: typeof OwnerAccountRouteImport
+      parentRoute: typeof OwnerRoute
+    }
+    '/owner/data': {
+      id: '/owner/data'
+      path: '/data'
+      fullPath: '/owner/data'
+      preLoaderRoute: typeof OwnerDataRouteImport
+      parentRoute: typeof OwnerRoute
+    }
+    '/owner/settings': {
+      id: '/owner/settings'
+      path: '/settings'
+      fullPath: '/owner/settings'
+      preLoaderRoute: typeof OwnerSettingsRouteImport
+      parentRoute: typeof OwnerRoute
+    }
+    '/owner/team': {
+      id: '/owner/team'
+      path: '/team'
+      fullPath: '/owner/team'
+      preLoaderRoute: typeof OwnerTeamRouteImport
+      parentRoute: typeof OwnerRoute
+    }
+    '/owner/t/$slug': {
+      id: '/owner/t/$slug'
+      path: '/t/$slug'
+      fullPath: '/owner/t/$slug'
+      preLoaderRoute: typeof OwnerTSlugRouteImport
+      parentRoute: typeof OwnerRoute
+    }
+    '/owner/vendors/': {
+      id: '/owner/vendors/'
+      path: '/vendors'
+      fullPath: '/owner/vendors/'
+      preLoaderRoute: typeof OwnerVendorsIndexRouteImport
+      parentRoute: typeof OwnerRoute
+    }
+    '/owner/vendors/$id': {
+      id: '/owner/vendors/$id'
+      path: '/vendors/$id'
+      fullPath: '/owner/vendors/$id'
+      preLoaderRoute: typeof OwnerVendorsIdRouteImport
+      parentRoute: typeof OwnerRoute
+    }
   }
 }
 
+interface OwnerRouteChildren {
+  OwnerAccountRoute: typeof OwnerAccountRoute
+  OwnerDataRoute: typeof OwnerDataRoute
+  OwnerSettingsRoute: typeof OwnerSettingsRoute
+  OwnerTeamRoute: typeof OwnerTeamRoute
+  OwnerIndexRoute: typeof OwnerIndexRoute
+  OwnerTSlugRoute: typeof OwnerTSlugRoute
+  OwnerVendorsIdRoute: typeof OwnerVendorsIdRoute
+  OwnerVendorsIndexRoute: typeof OwnerVendorsIndexRoute
+}
+
+const OwnerRouteChildren: OwnerRouteChildren = {
+  OwnerAccountRoute: OwnerAccountRoute,
+  OwnerDataRoute: OwnerDataRoute,
+  OwnerSettingsRoute: OwnerSettingsRoute,
+  OwnerTeamRoute: OwnerTeamRoute,
+  OwnerIndexRoute: OwnerIndexRoute,
+  OwnerTSlugRoute: OwnerTSlugRoute,
+  OwnerVendorsIdRoute: OwnerVendorsIdRoute,
+  OwnerVendorsIndexRoute: OwnerVendorsIndexRoute,
+}
+
+const OwnerRouteWithChildren = OwnerRoute._addFileChildren(OwnerRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  OwnerRoute: OwnerRoute,
+  OwnerRoute: OwnerRouteWithChildren,
   CSlugRoute: CSlugRoute,
   CIndexRoute: CIndexRoute,
 }

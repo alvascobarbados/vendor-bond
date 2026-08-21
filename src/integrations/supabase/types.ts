@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          created_at: string
+          currency_code: string
+          id: boolean
+          owner_first_name: string
+          public_base_url: string
+          site_name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency_code?: string
+          id?: boolean
+          owner_first_name?: string
+          public_base_url?: string
+          site_name?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency_code?: string
+          id?: boolean
+          owner_first_name?: string
+          public_base_url?: string
+          site_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       attachments: {
         Row: {
           created_at: string
@@ -189,6 +219,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      owners: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string
+          invited_by: string | null
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email: string
+          invited_by?: string | null
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string
+          invited_by?: string | null
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       payment_allocations: {
         Row: {
@@ -452,6 +509,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      is_owner: { Args: never; Returns: boolean }
       upsert_payment: {
         Args: {
           _allocations?: Json

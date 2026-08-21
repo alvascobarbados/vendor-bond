@@ -28,26 +28,28 @@ export const vendorState = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => slugInput.parse(d))
   .handler(async ({ data }) => {
     const h = await import("@/lib/vendor-auth.server");
+    const { appSettings } = await import("@/lib/settings.server");
+    const ownerName = (await appSettings()).owner_first_name;
     const vendor = await h.vendorBySlug(data.slug);
-    if (!vendor) return { state: "not_found" as const, firstName: "", company: "" };
+    if (!vendor) return { state: "not_found" as const, firstName: "", company: "", ownerName };
     const firstName = vendor.contact_first_name ?? vendor.name;
     const company = vendor.name;
     const access = await h.accessFor(vendor.id);
-    if (!access || !access.enabled) return { state: "disabled" as const, firstName, company };
+    if (!access || !access.enabled) return { state: "disabled" as const, firstName, company, ownerName };
 
     try {
       await h.requireVendorSession(data.slug);
-      return { state: "remembered" as const, firstName, company };
+      return { state: "remembered" as const, firstName, company, ownerName };
     } catch {
       /* fall through to the PIN screens */
     }
 
     if (access.locked_until && new Date(access.locked_until) > new Date())
-      return { state: "locked" as const, firstName, company, lockedUntil: access.locked_until };
-    if (access.pin_hash) return { state: "needs_pin" as const, firstName, company };
+      return { state: "locked" as const, firstName, company, ownerName, lockedUntil: access.locked_until };
+    if (access.pin_hash) return { state: "needs_pin" as const, firstName, company, ownerName };
     if (access.setup_code_hash && access.setup_code_expires_at && new Date(access.setup_code_expires_at) > new Date())
-      return { state: "needs_setup" as const, firstName, company };
-    return { state: "no_code" as const, firstName, company };
+      return { state: "needs_setup" as const, firstName, company, ownerName };
+    return { state: "no_code" as const, firstName, company, ownerName };
   });
 
 export const vendorSetup = createServerFn({ method: "POST" })

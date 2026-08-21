@@ -460,3 +460,53 @@
 .codebox { margin-top: 16px; border: 1px solid var(--line); border-radius: 16px; padding: 14px; background: var(--tint); }
 .codehead { font-size: 13px; color: var(--muted); }
 .codebig { font-family: var(--mono, ui-monospace, monospace); font-variant-numeric: tabular-nums; font-size: 34px; letter-spacing: 0.08em; margin: 6px 0; }
+
+/* ── Owner back-office shell ─────────────────────────── */
+.ownerlayout { min-height: 100dvh; background: var(--bg); }
+.ownertop {
+  position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 12px 16px calc(12px); background: var(--card);
+  border-bottom: 1px solid var(--line); padding-top: calc(12px + env(safe-area-inset-top));
+}
+.ownerchip {
+  border: 1px solid var(--line); background: var(--bg); border-radius: 999px;
+  padding: 6px 12px; font-size: 13px; color: var(--ink); max-width: 55vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ownernav { display: none; }
+.ownermain { padding: 16px 16px calc(28px + env(safe-area-inset-bottom)); }
+.ownerpage { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+.ownerhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ownerhead h2 { font-size: 20px; letter-spacing: -0.02em; margin: 0; }
+.ownercard {
+  border: 1px solid var(--line); border-radius: 16px; background: var(--card);
+  padding: 14px; display: flex; flex-direction: column; gap: 10px;
+}
+.ownercard.danger-zone { border-color: #f3c8c8; }
+.vcard.link { display: block; text-decoration: none; color: inherit; }
+.vcard .balance { margin-left: auto; font-weight: 600; }
+.events { display: flex; flex-direction: column; gap: 4px; }
+.eventrow { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--muted); }
+.ownersheet { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.35); display: flex; align-items: flex-end; }
+.ownersheetin {
+  width: 100%; background: var(--card); border-radius: 20px 20px 0 0; padding: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 6px;
+}
+.navlink {
+  display: block; padding: 10px 12px; border-radius: 10px; text-decoration: none;
+  color: var(--ink); font-size: 14px;
+}
+.navlink.big { font-size: 16px; padding: 12px; }
+.navlink.on { background: var(--bg); font-weight: 600; }
+.navfoot { margin-top: auto; display: flex; flex-direction: column; gap: 4px; padding: 12px; color: var(--muted); }
+
+@media (min-width: 900px) {
+  .ownerlayout { display: grid; grid-template-columns: 220px 1fr; }
+  .ownertop { display: none; }
+  .ownernav {
+    display: flex; flex-direction: column; gap: 4px; padding: 18px 12px;
+    border-right: 1px solid var(--line); background: var(--card); min-height: 100dvh; position: sticky; top: 0;
+  }
+  .ownerbrand { display: flex; align-items: center; gap: 8px; padding: 0 12px 14px; }
+  .ownerbrand .mark { width: 10px; height: 10px; border-radius: 3px; background: var(--accent, #0f9d58); }
+  .ownermain { padding: 24px; }
+}
