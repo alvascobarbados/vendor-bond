@@ -130,6 +130,7 @@ function ContractorView() {
       return (
         <Card title={`Hi ${s.firstName} 👋`} lead="Enter the setup code Av sent you." error={err} shake={shake}>
           <Boxes
+            key="code"
             value={code}
             onChange={(v) => {
               setCode(v);
@@ -143,6 +144,7 @@ function ContractorView() {
       return (
         <Card title="Now choose your own 6-digit PIN" error={err} shake={shake}>
           <Boxes
+            key="pin1"
             value={pin}
             onChange={(v) => {
               setPin(v);
@@ -155,6 +157,7 @@ function ContractorView() {
     return (
       <Card title="Enter it again" error={err} shake={shake}>
         <Boxes
+          key="pin2"
           value={pin2}
           onChange={(v) => {
             setPin2(v);
