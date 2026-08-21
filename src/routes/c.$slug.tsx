@@ -37,7 +37,7 @@ export const Route = createFileRoute("/c/$slug")({
   component: ContractorView,
 });
 
-function Boxes({ value, onChange, onDone }: { value: string; onChange: (v: string) => void; onDone: () => void }) {
+function Boxes({ value, onChange, onDone }: { value: string; onChange: (v: string) => void; onDone: (v: string) => void }) {
   return (
     <InputOTP
       maxLength={6}
@@ -45,7 +45,7 @@ function Boxes({ value, onChange, onDone }: { value: string; onChange: (v: strin
       inputMode="numeric"
       onChange={(v) => {
         onChange(v);
-        if (v.length === 6) setTimeout(onDone, 30);
+        if (v.length === 6) setTimeout(() => onDone(v), 30);
       }}
     >
       <InputOTPGroup>
@@ -136,7 +136,7 @@ function ContractorView() {
               setCode(v);
               setErr("");
             }}
-            onDone={() => code.length === 6 && setStep("pin1")}
+            onDone={(v) => v.length === 6 && setStep("pin1")}
           />
         </Card>
       );
@@ -163,9 +163,9 @@ function ContractorView() {
             setPin2(v);
             setErr("");
           }}
-          onDone={async () => {
+          onDone={async (v) => {
             if (busy) return;
-            if (pin2 !== pin) {
+            if (v !== pin) {
               setPin("");
               setPin2("");
               setStep("pin1");
@@ -203,11 +203,11 @@ function ContractorView() {
             setPin(v);
             setErr("");
           }}
-          onDone={async () => {
+          onDone={async (v) => {
             if (busy) return;
             setBusy(true);
             try {
-              await vendorVerifyPin({ data: { slug, pin } });
+              await vendorVerifyPin({ data: { slug, pin: v } });
               reload();
             } catch (e) {
               const m = String((e as Error).message ?? "");
