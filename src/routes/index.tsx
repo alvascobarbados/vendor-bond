@@ -187,10 +187,30 @@ function OwnerApp() {
   if (vendorsQ.isLoading) return <div className="loading">Loading…</div>;
   if (!current)
     return (
-      <div className="loading">
-        <p>No vendors yet for this account.</p>
+      <div className="authwrap">
+        <div className="authcard">
+          <h1>
+            Starpoint <span>RenoTracker</span>
+          </h1>
+          <p className="lead">No vendors are linked to this account yet.</p>
+          <button
+            className="primary fw"
+            onClick={async () => {
+              const r = await claimVendors({});
+              setToast(r.claimed ? `Linked ${r.claimed} vendor${r.claimed > 1 ? "s" : ""}` : "Nothing to link");
+              void qc.invalidateQueries({ queryKey: ["vendors"] });
+            }}
+          >
+            Link my vendors
+          </button>
+          <button className="linkbtn center" onClick={() => supabase.auth.signOut()}>
+            Sign out
+          </button>
+          <Toast message={toast} onDone={() => setToast("")} />
+        </div>
       </div>
     );
+
   if (!trackerQ.data) return <div className="loading">Loading {current.name}…</div>;
 
   const data = trackerQ.data;
