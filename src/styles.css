@@ -354,3 +354,58 @@
     button.receipt{pointer-events:none}
     .resolved-head,.oi.done{display:none}
   }
+
+  /* ── App shell additions (auth, vendor switcher, forms, PWA chrome) ── */
+  .loading{min-height:60vh;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px}
+  .authwrap{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+  .authcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;width:100%;max-width:380px;box-shadow:0 10px 30px rgba(21,32,27,.07)}
+  .authcard h1{font-size:19px;font-weight:700;letter-spacing:-.02em}
+  .authcard h1 span{color:var(--paid)}
+  .authcard .lead{font-size:13px;color:var(--muted);margin:6px 0 16px}
+  .authmsg{font-size:12.5px;color:var(--flag);background:var(--flag-bg);border:1px solid var(--flag-line);border-radius:9px;padding:8px 10px;margin-bottom:10px}
+
+  label.fw,.frow label{display:block;margin-bottom:10px;min-width:0}
+  label.fw span,.frow label span{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+  label.fw input,.frow label input{width:100%;font-family:var(--sans);font-size:14px;border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px;background:var(--surface);color:var(--ink)}
+  .frow label input,.allocrow input,.allocrow select{font-variant-numeric:tabular-nums}
+  label.fw input:focus,.frow label input:focus{outline:2px solid var(--paid);outline-offset:1px;border-color:transparent}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+  button.primary{appearance:none;cursor:pointer;background:var(--paid);color:#fff;border:0;border-radius:10px;padding:11px 18px;font-weight:600;font-size:14px}
+  button.ghost{appearance:none;cursor:pointer;background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);border-radius:10px;padding:11px 18px;font-weight:600;font-size:13.5px}
+  button.danger{appearance:none;cursor:pointer;background:none;color:#9a3412;border:1px solid #e7cbbc;border-radius:10px;padding:11px 14px;font-weight:600;font-size:13.5px;margin-right:auto}
+  button.fw{width:100%;margin-bottom:8px}
+  .linkbtn{appearance:none;background:none;border:0;cursor:pointer;color:var(--paid);font-size:12px;font-weight:600;padding:2px 0}
+  .linkbtn.center{display:block;margin:6px auto 0}
+
+  .vendorwrap{position:relative}
+  .vendormenu{position:absolute;right:0;top:calc(100% + 8px);z-index:40;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px;min-width:220px;box-shadow:0 14px 34px rgba(21,32,27,.16)}
+  .vendormenu button{appearance:none;cursor:pointer;width:100%;display:flex;gap:10px;align-items:center;text-align:left;background:none;border:0;border-radius:9px;padding:8px 9px;font-size:13.5px}
+  .vendormenu button:hover{background:var(--paper)}
+  .vendormenu button b{display:block;font-weight:600}
+  .vendormenu button small{display:block;font-size:11.5px;color:var(--muted)}
+  .vendormenu .avatar.sm{width:26px;height:26px;font-size:11px}
+  .vendormenu .signout{color:var(--muted);border-top:1px solid var(--line);border-radius:0;margin-top:4px;font-weight:600}
+
+  .fab{position:fixed;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:30;display:flex;flex-direction:column;align-items:center;gap:8px}
+  @media (min-width:720px){ .fab{bottom:28px} }
+  .fab-main{appearance:none;cursor:pointer;width:56px;height:56px;border-radius:50%;background:var(--paid);color:#fff;border:0;box-shadow:0 10px 24px rgba(30,111,80,.36);display:flex;align-items:center;justify-content:center}
+  .fab-main svg{width:26px;height:26px;stroke-width:2.4}
+  .fab-mini{appearance:none;cursor:pointer;height:34px;padding:0 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong);color:var(--ink);font-family:var(--mono);font-size:12px;font-weight:600;box-shadow:0 4px 12px rgba(21,32,27,.12)}
+
+  .sheetin.form{max-height:88vh;overflow:auto;padding:16px}
+  .seg2{display:flex;gap:6px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:14px}
+  .seg2 button{appearance:none;cursor:pointer;flex:1;border:0;background:none;border-radius:9px;padding:8px 6px;font-size:12.5px;font-weight:600;color:var(--muted)}
+  .seg2 button[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .allocs{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:var(--paper)}
+  .allochead{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
+  .allochead .ok{font-family:var(--mono);color:var(--paid);letter-spacing:0;text-transform:none;font-size:12.5px;font-weight:600}
+  .allochead .warn{font-family:var(--mono);color:var(--flag);letter-spacing:0;text-transform:none;font-size:12.5px;font-weight:600}
+  .allocrow{display:grid;grid-template-columns:1fr 92px 96px 28px;gap:6px;margin-bottom:7px}
+  .allocrow select,.allocrow input{font-family:var(--sans);font-size:12.5px;border:1px solid var(--line-strong);border-radius:9px;padding:8px 9px;background:var(--surface);color:var(--ink);min-width:0}
+  .allocrow .rm{appearance:none;cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:9px;color:var(--muted);font-size:15px;line-height:1}
+  .addalloc{appearance:none;cursor:pointer;background:none;border:0;color:var(--paid);font-size:12.5px;font-weight:600;padding:4px 0}
+  .allocwarn{margin-top:6px;font-family:var(--mono);font-size:11.5px;color:var(--flag);background:var(--flag-bg);border:1px solid var(--flag-line);border-radius:8px;padding:6px 9px}
+  .formacts{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-top:6px}
+  @media (max-width:560px){ .allocrow{grid-template-columns:1fr 84px 28px} .allocrow input:nth-of-type(2){grid-column:1 / -1} }
+  .note .who{color:var(--flag);opacity:.8}
