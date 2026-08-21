@@ -364,7 +364,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      upsert_payment: {
+        Args: {
+          _allocations?: Json
+          _amount: number
+          _bank_ref: string
+          _date: string
+          _description?: string
+          _detail?: string
+          _kind: Database["public"]["Enums"]["payment_kind"]
+          _payment_id?: string
+          _payment_no?: number
+          _vendor_id: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       attach_target: "payment" | "job" | "item"
