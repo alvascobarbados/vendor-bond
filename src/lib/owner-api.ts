@@ -58,13 +58,13 @@ export async function savePayment(vendorId: string, f: PaymentDraft) {
     _bank_ref: f.bank_ref.trim(),
     _amount: Number(f.amount),
     _kind: f.kind,
-    _payment_no: f.payment_no ? Number(f.payment_no) : null,
-    _description: f.description || null,
-    _detail: f.detail || null,
+    _payment_no: f.payment_no ? Number(f.payment_no) : undefined,
+    _description: f.description || undefined,
+    _detail: f.detail || undefined,
     _allocations: f.allocations
       .filter((a) => a.job_id && Number(a.amount))
       .map((a) => ({ job_id: a.job_id, amount: Number(a.amount), invoice_ref: a.invoice_ref || null })),
-    _payment_id: f.id ?? null,
+    _payment_id: f.id ?? undefined,
   });
   if (error) throw error;
 }
