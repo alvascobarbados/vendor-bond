@@ -364,7 +364,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      owns_vendor: { Args: { _vendor_id: string }; Returns: boolean }
+      [_ in never]: never
     }
     Enums: {
       attach_target: "payment" | "job" | "item"
