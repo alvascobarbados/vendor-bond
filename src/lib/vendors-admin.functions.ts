@@ -1,22 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { assertOwned } from "@/lib/vendor-auth.server";
 import { vendorIdInput, vendorSaveInput, enabledInput } from "@/lib/vendor-schemas-admin";
-
-async function owned(supabase: { from: (t: string) => never }, vendorId: string) {
-  const { data, error } = await (
-    supabase as unknown as {
-      from: (t: string) => {
-        select: (c: string) => { eq: (a: string, b: string) => { maybeSingle: () => Promise<{ data: { id: string } | null; error: unknown }> } };
-      };
-    }
-  )
-    .from("vendors")
-    .select("id")
-    .eq("id", vendorId)
-    .maybeSingle();
-  if (error || !data) throw new Error("FORBIDDEN");
-  return data.id;
-}
 
 export const adminListVendors = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -75,7 +60,7 @@ export const adminSaveVendor = createServerFn({ method: "POST" })
       bank: data.bank,
     };
     if (data.id) {
-      await owned(context.supabase as never, data.id);
+      await assertOwned(context.supabase, data.id);
       const { error } = await context.supabase.from("vendors").update(row).eq("id", data.id);
       if (error) throw error;
       return { id: data.id };
@@ -95,7 +80,7 @@ export const adminSetAccessEnabled = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => enabledInput.parse(d))
   .handler(async ({ data, context }) => {
-    await owned(context.supabase as never, data.vendor_id);
+    await assertOwned(context.supabase, data.vendor_id);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: existing } = await supabaseAdmin
       .from("vendor_access")
@@ -115,7 +100,7 @@ export const adminNewSetupCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => vendorIdInput.parse(d))
   .handler(async ({ data, context }) => {
-    await owned(context.supabase as never, data.vendor_id);
+    await assertOwned(context.supabase, data.vendor_id);
     const h = await import("@/lib/vendor-auth.server");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const code = String(crypto.getRandomValues(new Uint32Array(1))[0]! % 1_000_000).padStart(6, "0");
@@ -154,7 +139,7 @@ export const adminResetPin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => vendorIdInput.parse(d))
   .handler(async ({ data, context }) => {
-    await owned(context.supabase as never, data.vendor_id);
+    await assertOwned(context.supabase, data.vendor_id);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin
       .from("vendor_access")
