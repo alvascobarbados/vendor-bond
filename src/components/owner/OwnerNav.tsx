@@ -41,8 +41,13 @@ export function OwnerSidebar({ name }: { name: string }) {
 export function OwnerMenu({ name, onClose }: { name: string; onClose: () => void }) {
   const active = useActive();
   return (
-    <div className="ownersheet" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="ownersheetin">
+    <div
+      className="sheet"
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="sheetin">
         <div className="sheethead">{name}</div>
         {NAV.map((n) => (
           <Link key={n.to} to={n.to} className={`navlink big${active(n.to, n.exact) ? " on" : ""}`} onClick={onClose}>

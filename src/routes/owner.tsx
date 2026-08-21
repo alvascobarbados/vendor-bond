@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { Session } from "@supabase/supabase-js";
@@ -95,6 +95,7 @@ function OwnerLayout() {
   const [session, setSession] = useState<Session | null>(null);
   const [ready, setReady] = useState(false);
   const [menu, setMenu] = useState(false);
+  const onTracker = useRouterState({ select: (s) => s.location.pathname.startsWith("/owner/t/") });
 
 
   useEffect(() => {
@@ -123,7 +124,7 @@ function OwnerLayout() {
   const name = owner.display_name || owner.email;
 
   return (
-    <div className="ownerlayout">
+    <div className={`ownerlayout${onTracker ? " tracker" : ""}`}>
       <OwnerSidebar name={name} />
       <div className="ownertop">
         <b>Owner</b>
