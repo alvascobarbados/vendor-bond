@@ -111,6 +111,11 @@ export function OpenItemsPage() {
         </div>
         <div style={{ height: 8 }} />
         <NoteZone targetType="general" targetId={null} />
+        {api.onSwitch && (
+          <button className="linkbtn center switchlink" onClick={() => void api.onSwitch!()}>
+            {api.switchLabel ?? "Switch"}
+          </button>
+        )}
       </div>
     </section>
   );

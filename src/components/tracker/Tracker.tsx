@@ -30,15 +30,32 @@ export function Tracker({
 }) {
   const d = useMemo(() => derive(data), [data]);
   const [page, setPage] = useState<Page>("work");
-  const [compact, setCompact] = useState(false);
+  const [compact, setCompact] = useState(
+    () => typeof localStorage !== "undefined" && localStorage.getItem("renotracker.view") === "compact",
+  );
   const [filter, setFilter] = useState<PayFilter>("all");
   const [doc, setDoc] = useState<DocTarget | null>(null);
   const [sheet, setSheet] = useState(false);
 
   useEffect(() => {
     document.body.classList.toggle("compact", compact);
+    localStorage.setItem("renotracker.view", compact ? "compact" : "detailed");
     return () => document.body.classList.remove("compact");
   }, [compact]);
+
+  useEffect(() => {
+    const sync = () => {
+      const bar = document.querySelector(".topbar");
+      if (bar) document.documentElement.style.setProperty("--stick", `${Math.round(bar.getBoundingClientRect().height)}px`);
+    };
+    sync();
+    window.addEventListener("resize", sync);
+    const t = setTimeout(sync, 200);
+    return () => {
+      window.removeEventListener("resize", sync);
+      clearTimeout(t);
+    };
+  }, []);
 
   const ctx = {
     d,

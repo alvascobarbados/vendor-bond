@@ -11,6 +11,8 @@ export interface TrackerApi {
   removeAttachment?: (id: string, storage_path: string) => Promise<void>;
   refresh: () => void;
   toast: (msg: string) => void;
+  onSwitch?: () => void | Promise<void>;
+  switchLabel?: string;
 }
 
 interface Ctx {
