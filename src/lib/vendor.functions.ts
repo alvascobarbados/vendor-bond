@@ -211,3 +211,19 @@ export const vendorSignUrl = createServerFn({ method: "POST" })
     if (error) throw error;
     return { url: signed.signedUrl };
   });
+
+/** Front door: which contractor (if any) this browser is already signed in as. */
+export const currentContractor = createServerFn({ method: "GET" }).handler(async () => {
+  const h = await import("@/lib/vendor-auth.server");
+  const token = h.readCookie();
+  if (!token) return { slug: null as string | null };
+  const client = await h.db();
+  const { data: session } = await client
+    .from("vendor_sessions")
+    .select("vendor_id, expires_at")
+    .eq("token_hash", await h.sha256(token))
+    .maybeSingle();
+  if (!session || new Date(session.expires_at) < new Date()) return { slug: null as string | null };
+  const { data: vendor } = await client.from("vendors").select("slug").eq("id", session.vendor_id).maybeSingle();
+  return { slug: vendor?.slug ?? null };
+});
